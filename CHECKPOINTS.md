@@ -90,7 +90,7 @@ Các thay đổi contract của CP9 tới CP13 gom vào một lần deploy lại
 - [x] Tìm DAO thật có Governor trên testnet: chỉ thấy B4MAD DAO (Base Sepolia, governor 0x0DA4e9a900d39F6a5F1EfcA1385F65A6F5dD88fd), đã ngừng khoảng 2 tháng và toàn bộ token nằm ở ví deployer, nên không dùng để demo được. Thêm một Governor bất kỳ chỉ cần addGovernor trên Reactive và Hub.
 - [x] Reactive theo dõi nhiều Governor, Voter chọn Governor của mình
 - [x] Demo với một Governor thứ hai có kho bạc và timelock giống DAO thật (đã deploy, test Foundry chạy đủ vòng đời)
-- Xong khi: đề xuất trên Governor thứ hai cũng đi hết hai vòng.
+- Xong khi: đề xuất trên Governor thứ hai cũng đi hết hai vòng. ĐẠT 24/11: Treasury DAO qua giao diện, AI chấm For, bỏ phiếu, xếp hàng, thực thi, kho bạc trả 5.000 TDAO (submission/evidence.md).
 
 ## CP14: Dịch vụ AI chạy 24/7 trên cloud (01/12)
 - [ ] Deploy lên dịch vụ có gói miễn phí, key nằm trong biến môi trường của dịch vụ (đã sẵn: Dockerfile chạy 2 nguồn AI, /health, render.yaml; còn cần repo GitHub và tài khoản Render của bạn)

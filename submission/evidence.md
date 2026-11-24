@@ -46,3 +46,13 @@ Lasna transactions of the reactive contract for this run: VoteQueued and cron on
 ## Incident: Reactive did not relay Base Sepolia events on 2026-11-23
 
 For several hours, no reactive contract on Lasna reacted to new Base Sepolia events (old and new contracts alike, all with funds and active subscriptions per `rnk_getFilters`). On 2026-11-24 `rnk_getBlockSequences` showed Lasna processing Base Sepolia in real time again, and a test proposal was relayed in about 3 seconds. Nothing in the contracts changed.
+
+## Treasury DAO: from AI vote to treasury payout (2026-11-24)
+
+A fresh wallet set up a Voter in the Treasury DAO through the app (TDAO, fee paid, delegated, example policy) and posted "Pay 5,000 TDAO to the auditor for a security audit of the core contracts" with a matching transfer from the treasury. Both AI sources judged it For, the Voter voted For with 1,000 TDAO, the proposal passed, was queued in the timelock and executed. The treasury paid the auditor address 5,000 TDAO (treasury 20,000 to 15,000).
+
+| Step | Transaction |
+|---|---|
+| Propose (from the app) | `0x4cabae73863400340bf0c5c40adfda4c062cba08bb3156edb3a7c3255c5eacb6` |
+| Queue in timelock | `0x9e5695f4668b407d09d7da519ccb94f68011f51ae5bc488008993ce5ca08740b` |
+| Execute, treasury pays out | `0x61a343b5988eaf165a8ce5b3f4b0bb9d6b8eba35eec682d25f96627546a9af5e` |
