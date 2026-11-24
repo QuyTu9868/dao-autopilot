@@ -93,7 +93,7 @@ Các thay đổi contract của CP9 tới CP13 gom vào một lần deploy lại
 - Xong khi: đề xuất trên Governor thứ hai cũng đi hết hai vòng.
 
 ## CP14: Dịch vụ AI chạy 24/7 trên cloud (01/12)
-- [ ] Deploy lên dịch vụ có gói miễn phí, key nằm trong biến môi trường của dịch vụ
+- [ ] Deploy lên dịch vụ có gói miễn phí, key nằm trong biến môi trường của dịch vụ (đã sẵn: Dockerfile chạy 2 nguồn AI, /health, render.yaml; còn cần repo GitHub và tài khoản Render của bạn)
 - Xong khi: tắt máy vẫn có phán quyết cho đề xuất mới.
 
 ## CP15: Thử bằng ví thật (01/12)
@@ -102,9 +102,9 @@ Các thay đổi contract của CP9 tới CP13 gom vào một lần deploy lại
 - Xong khi: cả hai ví đi hết luồng, ghi lại lỗi nếu có.
 
 ## CP16: Quỹ lREACT không cạn (02/12)
-- [ ] Script kiểm tra số dư và nợ của contract Reactive, nạp khi dưới ngưỡng
-- [ ] Cảnh báo trong dịch vụ AI khi quỹ thấp
-- Xong khi: chạy script thấy quỹ đủ cho ít nhất 50 đề xuất.
+- [x] Script kiểm tra số dư và nợ của contract Reactive, nạp khi dưới ngưỡng (scripts/reactive-funds.mjs, nạp qua depositTo)
+- [x] Cảnh báo trong dịch vụ AI khi quỹ thấp (kiểm tra 10 phút một lần)
+- Xong khi: chạy script thấy quỹ đủ cho ít nhất 50 đề xuất. ĐẠT 24/11: đo thực tế khoảng 0,07 lREACT mỗi đề xuất, đã nạp đủ cho khoảng 60 đề xuất (tx Lasna 0x5bf524ba049ca503e07d4898fea91057714cfaa62221325bc68d494961d94af3).
 
 ## CP7: Nộp bài (04/12, dự phòng đến 06/12 03:00)
 - [ ] Nộp trên DoraHacks: repo, địa chỉ contract, tx hash, video
