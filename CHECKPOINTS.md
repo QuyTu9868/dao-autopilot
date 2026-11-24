@@ -48,7 +48,7 @@ Skill giao diện: impeccable (đã chọn). Không dùng chế độ live. Ch�
 
 ## CP6: Tài liệu và video (03/12)
 - [x] README nộp bài: tổng quan, cách chạy, địa chỉ contract, sơ đồ, link faucet
-- [x] Video dưới 3 phút: submission/video/dao-autopilot-demo.mp4 (1:58, giọng Gemini TTS). Còn tải lên YouTube để lấy link công khai
+- [x] Video dưới 3 phút: submission/video/dao-autopilot-demo.mp4 (bản v4, 2:37, giọng Gemini TTS, có Veto, hai nguồn AI, Treasury DAO). Còn tải lên YouTube để lấy link công khai
 - [ ] Repo public, giấy phép mã nguồn mở (đã có LICENSE MIT, còn tạo repo GitHub và đẩy lên)
 - Xong khi: người ngoài đọc README là chạy lại được.
 
