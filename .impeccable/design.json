@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T15:20:40Z",
+  "title": "Design System: DAO Autopilot",
+  "extensions": {
+    "colorMeta": {
+      "water": {
+        "role": "neutral",
+        "displayName": "Water Cream",
+        "canonical": "#F5F1E4",
+        "tonalRamp": [
+          "#342E18",
+          "#625424",
+          "#8D7834",
+          "#B79C44",
+          "#C9B36D",
+          "#D9C997",
+          "#E5DEC5",
+          "#F6F4EF"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#FFFDF6",
+        "tonalRamp": [
+          "#453708",
+          "#876900",
+          "#C19600",
+          "#FBC400",
+          "#FFD237",
+          "#FFDF71",
+          "#F8E8B2",
+          "#FAF6EB"
+        ]
+      },
+      "land": {
+        "role": "primary",
+        "displayName": "Apple Land",
+        "canonical": "#8ED462",
+        "tonalRamp": [
+          "#223815",
+          "#3B6A1D",
+          "#54982A",
+          "#6DC536",
+          "#8ED462",
+          "#AFE08F",
+          "#D1E9C1",
+          "#F1F7EE"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Trail Ink",
+        "canonical": "#2C2E2A",
+        "tonalRamp": [
+          "#262825",
+          "#434640",
+          "#61655C",
+          "#7E8378",
+          "#9B9F96",
+          "#B8BBB5",
+          "#D5D7D4",
+          "#F2F3F2"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#55584E",
+        "tonalRamp": [
+          "#272824",
+          "#45473F",
+          "#63665B",
+          "#818576",
+          "#9DA195",
+          "#BABCB4",
+          "#D6D7D3",
+          "#F2F3F2"
+        ]
+      },
+      "on-land-muted": {
+        "role": "neutral",
+        "displayName": "Marsh Ink",
+        "canonical": "#2F4A22",
+        "tonalRamp": [
+          "#22321B",
+          "#3B5C2A",
+          "#54843D",
+          "#6DAC4F",
+          "#8EC076",
+          "#AFD29E",
+          "#D1E2C8",
+          "#F1F5EF"
+        ]
+      },
+      "sand": {
+        "role": "neutral",
+        "displayName": "Sand",
+        "canonical": "#E4DFCB",
+        "tonalRamp": [
+          "#302C1D",
+          "#59502E",
+          "#7F7342",
+          "#A59656",
+          "#BBAE7B",
+          "#CEC5A1",
+          "#E0DCCA",
+          "#F5F4F0"
+        ]
+      },
+      "signal-yellow": {
+        "role": "secondary",
+        "displayName": "Signal Yellow",
+        "canonical": "#F5E211",
+        "tonalRamp": [
+          "#423E0A",
+          "#817705",
+          "#B9AA08",
+          "#F1DE0A",
+          "#F7E83F",
+          "#F9EE77",
+          "#F5F0B5",
+          "#F9F8EB"
+        ]
+      },
+      "coral": {
+        "role": "secondary",
+        "displayName": "Coral",
+        "canonical": "#FF705D",
+        "tonalRamp": [
+          "#450F08",
+          "#871000",
+          "#C11700",
+          "#FB1D00",
+          "#FF4E37",
+          "#FF8271",
+          "#F8BBB2",
+          "#FAECEB"
+        ]
+      },
+      "sky-blue": {
+        "role": "secondary",
+        "displayName": "Sky Blue",
+        "canonical": "#2BA0FF",
+        "tonalRamp": [
+          "#082945",
+          "#004A87",
+          "#006BC1",
+          "#008BFB",
+          "#37A5FF",
+          "#71BFFF",
+          "#B2D9F8",
+          "#EBF3FA"
+        ]
+      },
+      "lilac": {
+        "role": "secondary",
+        "displayName": "Lilac",
+        "canonical": "#EBC1FF",
+        "tonalRamp": [
+          "#310845",
+          "#5B0087",
+          "#8300C1",
+          "#AA00FB",
+          "#BE37FF",
+          "#D171FF",
+          "#E1B2F8",
+          "#F5EBFA"
+        ]
+      },
+      "danger-ink": {
+        "role": "neutral",
+        "displayName": "Failure Ink",
+        "canonical": "#8A1F10",
+        "tonalRamp": [
+          "#3E140E",
+          "#791B0E",
+          "#AD2714",
+          "#E1331A",
+          "#EA5F4B",
+          "#F08E80",
+          "#F1C0BA",
+          "#F8EEEC"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Panel titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Proposal titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Sentences and notes."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Meta lines, counters, status."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-pop",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "0.4s spring when a control or stop completes."
+      },
+      {
+        "name": "breathe",
+        "value": "1.4s ease-in-out infinite",
+        "purpose": "The live step gently scales 1 to 1.18."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "900px"
+      },
+      {
+        "name": "phone",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single action at the current step.",
+      "html": "<button class=\"ds-btn\">Mint 1,000 DAOT</button>",
+      "css": ".ds-btn{min-height:44px;padding:0 24px;border:0;border-radius:999px;background:#F5E211;color:#2C2E2A;font:500 1rem 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}.ds-btn:hover{transform:scale(1.04)}.ds-btn:active{transform:scale(.97)}.ds-btn:focus-visible{outline:3px solid #2BA0FF;outline-offset:3px}.ds-btn:disabled{background:#E4DFCB;color:#666A5F;cursor:not-allowed}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Proposal and policy entry.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Describe what the DAO should do\">",
+      "css": ".ds-input{width:100%;border:2px solid #2C2E2A;border-radius:22px;background:#FFFDF6;color:#2C2E2A;padding:12px 16px;font:500 1rem 'Hanken Grotesk',system-ui,sans-serif}.ds-input:focus-visible{outline:3px solid #2BA0FF;outline-offset:3px}"
+    },
+    {
+      "name": "Network Chip",
+      "kind": "chip",
+      "refersTo": "chip-network",
+      "description": "Shows the active network.",
+      "html": "<span class=\"ds-chip\">Base Sepolia</span>",
+      "css": ".ds-chip{display:inline-block;padding:6px 14px;border-radius:999px;background:#2BA0FF;color:#2C2E2A;font:500 1rem 'Hanken Grotesk',system-ui,sans-serif}"
+    },
+    {
+      "name": "Proposal Trail",
+      "kind": "custom",
+      "refersTo": "panel-proposal",
+      "description": "Four stops from posted to voted.",
+      "html": "<ol class=\"ds-trail\"><li class=\"done\"><span class=\"ds-dot\"></span>Posted</li><li class=\"done\"><span class=\"ds-dot\"></span>Relayed</li><li class=\"done for\"><span class=\"ds-dot\"></span>Verdict</li><li class=\"now\"><span class=\"ds-dot\"></span>Vote</li></ol>",
+      "css": ".ds-trail{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);font:500 1rem 'Hanken Grotesk',system-ui,sans-serif;color:#2C2E2A}.ds-trail li{position:relative;display:flex;flex-direction:column;gap:6px}.ds-trail li:not(:last-child)::before{content:'';position:absolute;top:10px;left:28px;right:6px;border-top:2px solid #2C2E2A}.ds-trail li.todo:not(:last-child)::before{border-top-style:dashed}.ds-dot{width:22px;height:22px;border-radius:50%;border:2px solid #2C2E2A;background:#FFFDF6}.done .ds-dot{background:#2C2E2A}.for .ds-dot{background:#8ED462}.against .ds-dot{background:#FF705D}.now .ds-dot{background:#F5E211}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Trail Map",
+    "overview": "The app reads like a printed park guide. Cream is the water, apple green is the land, and every proposal is a route with four stops you follow left to right.",
+    "keyCharacteristics": [
+      "Flat colour fields, no gradients, no grain, no glass.",
+      "Organic corners: lobes swell on one side, controls are full pills.",
+      "One authored motion: a spring pop when a stop completes.",
+      "Operate-first: the current step and its single action are the loudest thing on screen."
+    ],
+    "rules": [
+      {
+        "name": "The Colour Means Rule",
+        "body": "A state colour is never decoration. Green, coral and lilac appear only on outcomes, yellow only on the live step or action, blue only on information.",
+        "section": "colors"
+      },
+      {
+        "name": "The Words Too Rule",
+        "body": "Every state carries a text label as well as a colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Weight Rule",
+        "body": "Never switch to bold. Emphasis is a colour pill or a size step.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Coast Rule",
+        "body": "No box shadows, no blur, no gradients on our own surfaces.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep one yellow action per screen state, at the current setup step.",
+      "Do pair every state colour with a word.",
+      "Do show wallet states plainly: signing, pending, confirmed, rejected, failed.",
+      "Do keep the one spring motion for completion only, and honour reduced motion."
+    ],
+    "donts": [
+      "Don't add shadows, gradients or glass to our own surfaces.",
+      "Don't use bold type or a second typeface.",
+      "Don't use a dark neon wallet-dashboard look.",
+      "Don't use em dashes in any copy.",
+      "Don't use a coloured side border on rows or callouts."
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "dao-autopilot-ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node --env-file=../.env src/index.js",
+    "test": "node --test",
+    "start:agent2": "node --env-file=../.env --env-file=agent2.env src/index.js"
+  },
+  "dependencies": {
+    "ethers": "^6.13.0"
+  }
+}

@@ -1,0 +1,23 @@
+# Render Blueprint: dịch vụ AI (hai nguồn) chạy 24/7. Khoá bí mật điền trong dashboard của Render, không ghi ở đây.
+services:
+  - type: web
+    name: dao-autopilot-ai
+    runtime: docker
+    rootDir: ai-service
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: HUB_ADDRESS
+        value: "0x3AD291e582CfCEa430795cad7e2cFFb413856609"
+      - key: REACTIVE_ADDRESS
+        value: "0x0b2D1490Ea0E9A566eCcd61e8BaeAb81559c0f60"
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite
+      - key: BASE_SEPOLIA_RPC
+        value: https://sepolia.base.org
+      - key: AI_SERVICE_PRIVATE_KEY
+        sync: false
+      - key: AI2_SERVICE_PRIVATE_KEY
+        sync: false
+      - key: LLM_API_KEY
+        sync: false

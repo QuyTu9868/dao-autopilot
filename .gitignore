@@ -1,0 +1,17 @@
+.env
+node_modules/
+out/
+cache/
+broadcast/
+.next/
+dist/
+*.zip
+ai-service.log
+vite.log
+contracts/lib/
+frontend/dist/
+*.mp4
+*.log
+.impeccable/review/
+.impeccable/mocks/
+scratch-*
