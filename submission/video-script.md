@@ -15,5 +15,3 @@ File: `submission/video/dao-autopilot-demo.mp4` (1440x900, English voice by Gemi
 | history | The voter's history and counters | My voter keeps its own history: every verdict, its reason, and what happened. |
 | treasury | Treasury DAO: executed treasury payout | The same loop runs on a second DAO with a real treasury and a timelock. There, an approved audit payment was queued, executed, and the treasury paid out five thousand tokens. |
 | end | End card with measured latency | Event to callback in about two point six seconds, and verdict to vote in about one point six. Two AI sources must agree, and the owner can always veto or vote manually. DAO Autopilot is open source, on Base Sepolia and Reactive Lasna. |
-
-The previous cut (version 3, before the veto window and two AI sources) is kept as `dao-autopilot-demo-v3.mp4`.
