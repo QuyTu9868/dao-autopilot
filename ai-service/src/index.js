@@ -19,6 +19,9 @@ const provider = new ethers.JsonRpcProvider(env("BASE_SEPOLIA_RPC", "https://sep
 const wallet = new ethers.Wallet(need(env("AI_KEY_VAR", "AI_SERVICE_PRIVATE_KEY")), provider);
 const apiKey = need("LLM_API_KEY");
 const model = env("AGENT_MODEL", env("GEMINI_MODEL", "gemini-3.1-flash-lite"));
+// Model dự phòng khi model chính quá tải lâu (503, 429). Mặc định dùng bản flash-lite mới nhất của Google.
+const fallbackModel = env("FALLBACK_MODEL", "gemini-flash-lite-latest");
+const RETRY_ROUNDS = Number(env("RETRY_ROUNDS", "3"));
 const MAX_VOTERS = Number(env("MAX_VOTERS_PER_PROPOSAL", "50"));
 
 const hub = new ethers.Contract(
@@ -93,16 +96,35 @@ async function handle(governorAddr, proposalId, eventBlock) {
   }
   if (jobs.length === 0) return log(`${short(proposalId)} không có Voter nào cần chấm`);
 
-  for (const { voterAddr, policy } of jobs) {
-    try {
-      const r = await judge({ apiKey, model, policy, description: proposal.description, actions });
-      log(`${short(proposalId)} ${voterAddr.slice(0, 8)}: ${r.verdict} (${r.confidence}) ${r.reason}`);
-      const tx = await hub.submitVerdict(voterAddr, proposalId, VERDICT_ENUM[r.verdict], r.confidence, r.reason);
-      log(`${short(proposalId)} ${voterAddr.slice(0, 8)} submitVerdict tx ${tx.hash}`);
-      await tx.wait();
-    } catch (err) {
-      log(`${short(proposalId)} ${voterAddr.slice(0, 8)} lỗi: ${err.shortMessage || err.message}`);
+  // Voter nào chấm hoặc gửi lỗi thì thử lại ở lượt sau, khi đề xuất vẫn đang mở bỏ phiếu.
+  let pending = jobs;
+  for (let round = 0; round <= RETRY_ROUNDS && pending.length > 0; round++) {
+    if (round > 0) {
+      await sleep(20_000);
+      if (Number(await governor.state(proposalId)) !== 1) {
+        log(`${short(proposalId)} hết hạn bỏ phiếu, bỏ ${pending.length} Voter chưa chấm được`);
+        return;
+      }
+      log(`${short(proposalId)} thử lại lượt ${round} cho ${pending.length} Voter`);
     }
+    const failed = [];
+    for (const job of pending) {
+      const { voterAddr, policy } = job;
+      try {
+        if (await hub.finalized(keyOf(voterAddr, proposalId))) continue;
+        if (Number(await hub.agentVerdictOf(voterAddr, proposalId, wallet.address)) !== 0) continue;
+        const r = await judge({ apiKey, model, fallbackModel, policy, description: proposal.description, actions });
+        const via = r.fallbackFrom ? ` [dự phòng ${r.model}, vì ${r.primaryError}]` : "";
+        log(`${short(proposalId)} ${voterAddr.slice(0, 8)}: ${r.verdict} (${r.confidence}) ${r.reason}${via}`);
+        const tx = await hub.submitVerdict(voterAddr, proposalId, VERDICT_ENUM[r.verdict], r.confidence, r.reason);
+        log(`${short(proposalId)} ${voterAddr.slice(0, 8)} submitVerdict tx ${tx.hash}`);
+        await tx.wait();
+      } catch (err) {
+        log(`${short(proposalId)} ${voterAddr.slice(0, 8)} lỗi: ${err.shortMessage || err.message}`);
+        failed.push(job);
+      }
+    }
+    pending = failed;
   }
 }
 

@@ -75,7 +75,7 @@ Reactive Lasna (chain 5318007):
 |---|---|
 | DaoReactive | `0x0b2D1490Ea0E9A566eCcd61e8BaeAb81559c0f60` |
 
-Registered AI sources: `0x8D41Be50E8aDC8892ca03A9CE3d0998AE6eB9637` (Gemini 3.1 Flash-Lite) and `0x3F7766680d69e0523307eC4F815B86071ac5B68d` (Gemini 3.5 Flash-Lite), threshold 2.
+Registered AI sources: `0x8D41Be50E8aDC8892ca03A9CE3d0998AE6eB9637` (Gemini 3.1 Flash-Lite) and `0x3F7766680d69e0523307eC4F815B86071ac5B68d` (Gemini 3.5 Flash-Lite), threshold 2. If a source's model is overloaded (429 or 5xx), it retries with growing delays for about 90 seconds, then falls back to `gemini-flash-lite-latest`, and retries voters it could not judge in later rounds while voting is open. The log records which model was used.
 
 ## Trust assumptions and limits
 

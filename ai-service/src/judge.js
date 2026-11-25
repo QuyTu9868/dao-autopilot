@@ -62,9 +62,37 @@ const RESPONSE_SCHEMA = {
   propertyOrdering: ["claimed", "actual", "verdict", "confidence", "reason"],
 };
 
-// Thử tối đa 3 lần (429 và lỗi mạng). Hết lần vẫn lỗi thì ném lỗi, không tự bịa phán quyết.
-export async function judge({ apiKey, model, policy, description, actions = "" }) {
+// Lỗi tạm (429, 5xx, mạng, đầu ra hỏng) thì thử lại với thời gian chờ tăng dần, tổng khoảng 1,5 phút.
+// Model chính vẫn lỗi thì chuyển sang model dự phòng (nếu có). Hết cách thì ném lỗi, không tự bịa phán quyết.
+export const RETRY_DELAYS_MS = [2000, 4000, 8000, 16000, 30000, 30000];
+
+async function callModel({ apiKey, model, body, delays }) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  let lastErr;
+  for (let attempt = 0; attempt <= delays.length; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (res.status === 429 || res.status >= 500) throw new Error(`Gemini ${model} HTTP ${res.status}`);
+      if (!res.ok) throw Object.assign(new Error(`Gemini ${model} HTTP ${res.status}`), { fatal: true });
+      const data = await res.json();
+      const parsed = parseVerdict(data?.candidates?.[0]?.content?.parts?.[0]?.text);
+      if (!parsed) throw new Error(`Gemini ${model} returned unparsable output`);
+      return parsed;
+    } catch (err) {
+      lastErr = err;
+      if (err.fatal || attempt === delays.length) break;
+      await new Promise((r) => setTimeout(r, delays[attempt]));
+    }
+  }
+  throw lastErr;
+}
+
+export async function judge({ apiKey, model, fallbackModel, policy, description, actions = "", delays = RETRY_DELAYS_MS }) {
   const body = {
     contents: [{ parts: [{ text: buildPrompt(policy, description, actions) }] }],
     generationConfig: {
@@ -73,26 +101,11 @@ export async function judge({ apiKey, model, policy, description, actions = "" }
       responseSchema: RESPONSE_SCHEMA,
     },
   };
-  let lastErr;
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify(body),
-        signal: AbortSignal.timeout(30_000),
-      });
-      if (res.status === 429 || res.status >= 500) throw new Error(`Gemini HTTP ${res.status}`);
-      if (!res.ok) throw Object.assign(new Error(`Gemini HTTP ${res.status}`), { fatal: true });
-      const data = await res.json();
-      const parsed = parseVerdict(data?.candidates?.[0]?.content?.parts?.[0]?.text);
-      if (!parsed) throw new Error("Gemini returned unparsable output");
-      return parsed;
-    } catch (err) {
-      lastErr = err;
-      if (err.fatal) break;
-      await new Promise((r) => setTimeout(r, 2000 * attempt));
-    }
+  try {
+    return { ...(await callModel({ apiKey, model, body, delays })), model };
+  } catch (err) {
+    if (!fallbackModel || fallbackModel === model) throw err;
+    const r = await callModel({ apiKey, model: fallbackModel, body, delays: delays.slice(0, 3) });
+    return { ...r, model: fallbackModel, fallbackFrom: model, primaryError: err.message };
   }
-  throw lastErr;
 }
