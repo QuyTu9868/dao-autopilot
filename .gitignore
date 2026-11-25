@@ -15,3 +15,4 @@ frontend/dist/
 .impeccable/review/
 .impeccable/mocks/
 scratch-*
+deploy.env
