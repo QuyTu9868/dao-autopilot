@@ -4,7 +4,7 @@ Write your DAO voting policy in plain language. When a proposal appears, two ind
 
 Built for the Reactive Omni Buildathon, track **Reactive Meets AI**. Runs on **Base Sepolia** (tokens, Governors, voters) and **Reactive Lasna** (the reactive contract). Test networks only, no real funds.
 
-- App: _deploy link to be added_
+- App: https://dao-autopilot.vercel.app
 - Demo video: _link to be added_
 - Contract addresses: see [Deployed contracts](#deployed-contracts)
 

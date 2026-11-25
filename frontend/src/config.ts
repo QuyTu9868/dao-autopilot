@@ -1,4 +1,6 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, getDefaultConfig } from '@rainbow-me/rainbowkit'
+import { injectedWallet } from '@rainbow-me/rainbowkit/wallets'
+import { createConfig, http } from 'wagmi'
 import { parseAbi } from 'viem'
 import { baseSepolia } from 'wagmi/chains'
 
@@ -45,11 +47,21 @@ export const AGENT_NAMES: Record<string, string> = {
   '0x3f7766680d69e0523307ec4f815b86071ac5b68d': 'Gemini 3.5 Flash-Lite',
 }
 
-export const wagmiConfig = getDefaultConfig({
-  appName: 'DAO Autopilot',
-  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'demo-project-id',
-  chains: [chain],
-})
+// Có projectId WalletConnect thì dùng bộ ví đầy đủ (gồm ví điện thoại).
+// Không có thì chỉ hiện ví cài trong trình duyệt (MetaMask, Rabby... qua EIP-6963), để không có nút WalletConnect hỏng.
+const wcProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string | undefined
+
+export const wagmiConfig = wcProjectId
+  ? getDefaultConfig({ appName: 'DAO Autopilot', projectId: wcProjectId, chains: [chain] })
+  : createConfig({
+      chains: [chain],
+      transports: { [chain.id]: http() },
+      multiInjectedProviderDiscovery: true,
+      connectors: connectorsForWallets([{ groupName: 'Browser wallets', wallets: [injectedWallet] }], {
+        appName: 'DAO Autopilot',
+        projectId: 'unused',
+      }),
+    })
 
 export const tokenAbi = parseAbi([
   'function mint(uint256 amount)',
