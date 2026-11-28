@@ -7,6 +7,7 @@ import http from "node:http";
 import { ethers } from "ethers";
 import { judge } from "./judge.js";
 import { describeActions } from "./actions.js";
+import { createDrip } from "./drip.js";
 
 const env = (k, d) => process.env[k] || d;
 const need = (k) => {
@@ -17,6 +18,8 @@ const need = (k) => {
 
 const provider = new ethers.JsonRpcProvider(env("BASE_SEPOLIA_RPC", "https://sepolia.base.org"));
 const wallet = new ethers.Wallet(need(env("AI_KEY_VAR", "AI_SERVICE_PRIVATE_KEY")), provider);
+// Ví này vừa gửi phán quyết vừa cấp gas (nguồn 1), nên dùng NonceManager để hai việc không tranh nonce.
+const signer = new ethers.NonceManager(wallet);
 const apiKey = need("LLM_API_KEY");
 const model = env("AGENT_MODEL", env("GEMINI_MODEL", "gemini-3.1-flash-lite"));
 // Model dự phòng khi model chính quá tải lâu (503, 429). Mặc định dùng bản flash-lite mới nhất của Google.
@@ -34,7 +37,7 @@ const hub = new ethers.Contract(
     "function finalized(bytes32) view returns (bool)",
     "function submitVerdict(address voter, uint256 proposalId, uint8 verdict, uint8 confidence, string reason)",
   ],
-  wallet,
+  signer,
 );
 const voterAbi = [
   "function governor() view returns (address)",
@@ -121,6 +124,7 @@ async function handle(governorAddr, proposalId, eventBlock) {
         await tx.wait();
       } catch (err) {
         log(`${short(proposalId)} ${voterAddr.slice(0, 8)} lỗi: ${err.shortMessage || err.message}`);
+        signer.reset();
         failed.push(job);
       }
     }
@@ -153,16 +157,57 @@ async function checkReactiveFunds() {
   }
 }
 
-// CP14: endpoint /health cho nền tảng cloud (chỉ mở khi có biến PORT).
+// CP14: endpoint /health cho nền tảng cloud; /drip cấp gas cho ví mới. Chỉ mở khi có biến PORT (nguồn 1).
 const status = { agent: wallet.address, model, startedAt: new Date().toISOString(), lastScanBlock: 0, lastScanAt: null, lastReview: null };
+const ALLOWED_ORIGINS = env("ALLOWED_ORIGINS", "https://dao-autopilot.vercel.app,http://localhost:5173,http://localhost:4173").split(",");
+const drip = createDrip({ signer, provider, log });
+
+function send(res, code, body, origin) {
+  const headers = { "content-type": "application/json" };
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    headers["access-control-allow-origin"] = origin;
+    headers["vary"] = "origin";
+  }
+  res.writeHead(code, headers);
+  res.end(JSON.stringify(body));
+}
+
 if (process.env.PORT) {
   http
-    .createServer((_req, res) => {
+    .createServer(async (req, res) => {
+      const origin = req.headers.origin;
+      const path = (req.url || "/").split("?")[0];
+      if (req.method === "OPTIONS") {
+        res.writeHead(204, {
+          "access-control-allow-origin": ALLOWED_ORIGINS.includes(origin) ? origin : "",
+          "access-control-allow-methods": "POST, GET, OPTIONS",
+          "access-control-allow-headers": "content-type",
+          "access-control-max-age": "86400",
+        });
+        return res.end();
+      }
+      if (path === "/drip" && req.method === "POST") {
+        let raw = "";
+        req.on("data", (c) => {
+          raw += c;
+          if (raw.length > 1000) req.destroy();
+        });
+        req.on("end", async () => {
+          try {
+            const { address } = JSON.parse(raw || "{}");
+            const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").toString().split(",")[0].trim();
+            const r = await drip(String(address || ""), ip);
+            send(res, r.status, r.body, origin);
+          } catch (err) {
+            send(res, 400, { error: "Bad request." }, origin);
+          }
+        });
+        return;
+      }
       const stale = !status.lastScanAt || Date.now() - Date.parse(status.lastScanAt) > 60_000;
-      res.writeHead(stale ? 503 : 200, { "content-type": "application/json" });
-      res.end(JSON.stringify({ ok: !stale, ...status }));
+      send(res, stale ? 503 : 200, { ok: !stale, ...status }, origin);
     })
-    .listen(Number(process.env.PORT), () => log(`health trên cổng ${process.env.PORT}`));
+    .listen(Number(process.env.PORT), () => log(`health và drip trên cổng ${process.env.PORT}`));
 }
 
 async function main() {

@@ -8,6 +8,8 @@ export const chain = baseSepolia
 export const EXPLORER = 'https://sepolia.basescan.org'
 export const BLOCKSCOUT = 'https://base-sepolia.blockscout.com/api/v2'
 export const FAUCET_URL = 'https://www.alchemy.com/faucets/base-sepolia'
+// Dịch vụ AI cũng cấp một ít ETH test cho ví mới (POST /drip).
+export const DRIP_URL = import.meta.env.VITE_DRIP_URL || 'https://dao-autopilot-ai.onrender.com'
 
 export const HUB = '0x3AD291e582CfCEa430795cad7e2cFFb413856609' as const
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useSwitchChain, useWriteContract } from 'wagmi'
 import { formatEther, formatUnits } from 'viem'
-import { EXPLORER, FAUCET_URL, HUB, MINT_AMOUNT, chain, hubAbi, tokenAbi, voterAbi } from './config'
+import { DRIP_URL, EXPLORER, FAUCET_URL, HUB, MINT_AMOUNT, chain, hubAbi, tokenAbi, voterAbi } from './config'
 import { Action } from './Action'
 import { useSetup } from './useAutopilot'
 
@@ -114,14 +114,58 @@ function ConnectStep({ s }: { s: Setup }) {
         />
       </>
     )
+  return <GasStep s={s} />
+}
+
+// Ví chưa có gas: xin 0.002 ETH test từ dịch vụ của dự án, hoặc dùng faucet công khai.
+function GasStep({ s }: { s: Setup }) {
+  const [state, setState] = useState<{ kind: 'idle' | 'asking' | 'sent' | 'error'; text?: string; hash?: string }>({ kind: 'idle' })
+  async function ask() {
+    setState({ kind: 'asking' })
+    try {
+      const res = await fetch(`${DRIP_URL}/drip`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ address: s.address }),
+        signal: AbortSignal.timeout(90_000),
+      })
+      const body = await res.json().catch(() => ({}))
+      if (res.ok) setState({ kind: 'sent', hash: body.hash })
+      else setState({ kind: 'error', text: body.error || `Request failed (${res.status}).` })
+    } catch {
+      setState({ kind: 'error', text: 'The gas service did not answer. It may be waking up, try again in a minute.' })
+    }
+  }
   return (
-    <p className="note">
-      {s.ethLoaded ? 'This wallet has no Base Sepolia ETH to pay for gas.' : 'Checking your balance.'}{' '}
-      <a href={FAUCET_URL} target="_blank" rel="noreferrer">
-        Get free test ETH from a faucet
-      </a>
-      . This step updates by itself once the ETH arrives.
-    </p>
+    <>
+      <p className="note">
+        {s.ethLoaded ? 'This wallet has no Base Sepolia ETH to pay for gas.' : 'Checking your balance.'} New test wallets can get 0.002 ETH from us, enough for the whole demo.
+      </p>
+      <div className="action">
+        <button type="button" className="capsule" onClick={ask} disabled={state.kind === 'asking' || state.kind === 'sent'}>
+          {state.kind === 'asking' ? 'Sending test ETH' : state.kind === 'sent' ? 'Test ETH sent' : 'Get free test gas'}
+        </button>
+        <p className={`txline ${state.kind === 'error' ? 'failed' : ''}`} role="status" aria-live="polite">
+          {state.kind === 'asking' && 'Asking the DAO Autopilot service. This can take up to a minute if it was asleep.'}
+          {state.kind === 'sent' && (
+            <>
+              Sent. This step continues by itself once it lands.{' '}
+              <a href={`${EXPLORER}/tx/${state.hash}`} target="_blank" rel="noreferrer">
+                View transaction
+              </a>
+            </>
+          )}
+          {state.kind === 'error' && state.text}
+        </p>
+      </div>
+      <p className="note">
+        Or use a public{' '}
+        <a href={FAUCET_URL} target="_blank" rel="noreferrer">
+          Base Sepolia faucet
+        </a>
+        .
+      </p>
+    </>
   )
 }
 
