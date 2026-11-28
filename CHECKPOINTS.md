@@ -93,8 +93,8 @@ Các thay đổi contract của CP9 tới CP13 gom vào một lần deploy lại
 - Xong khi: đề xuất trên Governor thứ hai cũng đi hết hai vòng. ĐẠT 24/11: Treasury DAO qua giao diện, AI chấm For, bỏ phiếu, xếp hàng, thực thi, kho bạc trả 5.000 TDAO (submission/evidence.md).
 
 ## CP14: Dịch vụ AI chạy 24/7 trên cloud (01/12)
-- [ ] Deploy lên dịch vụ có gói miễn phí, key nằm trong biến môi trường của dịch vụ (đã sẵn: Dockerfile chạy 2 nguồn AI, /health, render.yaml; còn cần repo GitHub và tài khoản Render của bạn)
-- Xong khi: tắt máy vẫn có phán quyết cho đề xuất mới.
+- [x] Deploy lên Render (gói Free), key nằm trong biến môi trường của Render; UptimeRobot ping /health mỗi 5 phút để không ngủ. https://dao-autopilot-ai.onrender.com/health
+- Xong khi: tắt máy vẫn có phán quyết cho đề xuất mới. ĐẠT 28/11: máy không chạy nguồn AI nào, đề xuất mới được cả hai nguồn trên Render chấm sau 71 giây, Voter bỏ For sau cửa sổ phủ quyết.
 
 ## CP15: Thử bằng ví thật (01/12)
 - [ ] MetaMask trên máy tính đi hết luồng
