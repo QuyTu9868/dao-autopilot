@@ -6,6 +6,7 @@ services:
     rootDir: ai-service
     plan: free
     healthCheckPath: /health
+    autoDeployTrigger: commit
     envVars:
       - key: HUB_ADDRESS
         value: "0x3AD291e582CfCEa430795cad7e2cFFb413856609"

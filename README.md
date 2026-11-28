@@ -42,13 +42,26 @@ sequenceDiagram
 3. **Agreement.** The Hub accepts one verdict per source and finalizes only when the threshold (2 of 2) agrees. If the sources disagree, no vote is cast and the app shows what each said.
 4. **Round 2, verdict to vote, with a veto window.** On `VerdictSubmitted`, the reactive contract either calls back at once or, if the owner set a veto window, queues the vote and subscribes to Reactive's `Cron10` events. Each tick (about 10 s) sends the votes whose window is over, then unsubscribes when the queue is empty. The owner can veto from the app until then.
 
-## Try it
+## Try it in 3 minutes (for judges)
 
-1. Open the app and pick a DAO: **Demo DAO** (fast, signal and transfer proposals) or **Treasury DAO** (built like a real DAO: a 20,000 TDAO treasury in a timelock; passed proposals are queued, then executed).
-2. Connect a test wallet on Base Sepolia (test ETH from a [faucet](https://www.alchemy.com/faucets/base-sepolia)), mint test tokens, create your Voter (0.0005 ETH, pays its callbacks and keeps spam out), delegate, write a policy. Optionally set a confidence threshold and a veto window.
-3. Post a test proposal or an example, such as "Pay auditor 5,000 (sends 50,000)". Voting opens after 1 minute and runs 5 minutes. Watch the trail: Posted, Relayed, Verdict, Vote, each stop linked to its transaction, plus the decoded actions and each AI source's verdict.
+You only need a browser wallet such as MetaMask. No test ETH needed.
 
-Delegate **before** a proposal is posted: votes are counted when a proposal opens.
+1. Open **https://dao-autopilot.vercel.app**, keep **Demo DAO** selected, press **Connect wallet**. Use a fresh wallet; if it is on another network, the app asks it to switch to Base Sepolia.
+2. Press **Get free test gas**: the project sends 0.002 Base Sepolia ETH to brand new wallets, enough for the whole demo (a public faucet link is there as a fallback).
+3. Follow the green route, one signature per step: **Mint 1,000 DAOT**, **Create my voter** (0.0005 ETH fee), **Delegate to my voter**, then **Use an example** policy and **Save policy**. Optionally set a veto window.
+4. Post the example **"Pay auditor 5,000 DAOT (sends 50,000)"**. Voting opens after 1 minute; about a minute later both AI sources flag the mismatch and your voter votes Against. Post **"Pay auditor 5,000 DAOT"** to see a For verdict you can **veto**.
+
+Every stop on a proposal's trail (Posted, Relayed, Verdict, Vote) links to its transaction. Delegate **before** posting: votes are counted when a proposal opens. The AI service runs 24/7 on Render; if it was idle, the first request can take up to a minute.
+
+| A mismatch caught and voted Against | A For verdict vetoed by its owner |
+|---|---|
+| ![Mismatch voted Against](docs/screenshots/02-mismatch-against.png) | ![Vetoed vote](docs/screenshots/03-vetoed.png) |
+
+| Your autopilot: setup route and history | First screen |
+|---|---|
+| ![Autopilot and history](docs/screenshots/04-autopilot-history.png) | ![Start](docs/screenshots/01-start.png) |
+
+The **Treasury DAO** tab works the same way with TDAO; there, passed proposals pay out of a timelocked treasury.
 
 ## Measured and shown
 
